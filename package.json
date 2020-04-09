@@ -1,0 +1,29 @@
+{
+  "name": "knitr-js",
+  "version": "0.0.1",
+  "description": "JS implementation of knitr and Rmarkdown",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TianyiShi2001/knitr-js.git"
+  },
+  "keywords": [
+    "knitr"
+  ],
+  "author": "Tianyi Shi <ShiTianyi2001@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TianyiShi2001/knitr-js/issues"
+  },
+  "homepage": "https://github.com/TianyiShi2001/knitr-js/",
+  "devDependencies": {
+    "@types/node": "^13.11.1",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "commander": "^5.0.0"
+  }
+}

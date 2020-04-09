@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "lib": ["es2020"],
+    //s"target": "es5",
+    "downlevelIteration": true
+  }
+}

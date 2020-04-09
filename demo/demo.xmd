@@ -8,3 +8,17 @@
 - compute and renders javascript code snippets
 - render `.xmd` into `.md`, then uses `pandoc` to generate various output formats, including pdf, html, docx
 
+## Code Chunk Demo
+
+```{js my-js-chunk, eval=true}
+console.log("Hello world from node.js!")
+```
+
+```{r my-r-chunk, eval:true}
+print("Hello world from R!")
+```
+
+```{rust(cargo) my-rust-chunk}
+println!("Hello world from Rust!")
+```
+

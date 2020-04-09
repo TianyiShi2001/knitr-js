@@ -1,5 +1,15 @@
-import { getOptions } from "./options";
+import { options } from "./Options";
 import { Chunk } from "./Chunk";
+import { executeChunk } from "./exec";
+
+export const ENGINE_ALIASES = {
+  js: "javascript",
+  ts: "typescript",
+  rs: "rust",
+  py: "python",
+  "c++": "cpp",
+  "*": "generic",
+};
 
 type Engine = (chunk: Chunk) => Result;
 

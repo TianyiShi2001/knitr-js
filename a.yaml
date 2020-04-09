@@ -1,0 +1,18 @@
+---
+render:
+  echo: true
+  eval: true
+  include: true
+  message: true
+  warning: true
+format:
+  highlightjs: ""
+engines:
+  javascript: "node"
+  python: "python"
+  r: "Rscript"
+  typescript: "ts-node"
+commands:
+  node: "node -e"
+  rustc: ""
+___

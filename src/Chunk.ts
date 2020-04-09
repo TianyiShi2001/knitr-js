@@ -26,7 +26,7 @@ export interface CustomOptions {
 }
 
 export const defaultRenderOptions: RenderOptions = {
-  echo: true,
+  echo: options.true,
   eval: true,
   include: true,
   message: true,

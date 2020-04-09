@@ -1,3 +1,23 @@
+---
+code:
+  render:
+    echo: false
+  engines:
+    rust:
+      cargo:
+        path: ../../foo
+    javascript:
+      node:
+        version: 13.8.0
+output:
+  pdf:
+    engine: xelatex
+    preamble: ./a.tex
+  html:
+    template: ./a.html
+---
+
+
 # knit-js and xmd
 
 **knit-js** and **xmd** are implementations of R's **[knitr](http://yihui.name/knitr/)** and **[R Markdown]** in Node.js.
@@ -20,5 +40,18 @@ print("Hello world from R!")
 
 ```{rust(cargo) my-rust-chunk}
 println!("Hello world from Rust!")
+```
+
+```{rust(cargo) my-rust-chunk, cargo.path="./foo/bar"}
+println!("Hello world from Rust!")
+```
+
+```{js, node.version='13.8'}
+console.log("hello")
+```
+
+See \@ref(code:any)
+
+```{* any, caption="Hello world"}
 ```
 

@@ -1,4 +1,4 @@
-import { defaultEngine } from "./engines";
+import { defaultEngine } from "./Engine";
 import { Chunk } from "./Chunk";
 
 export function* parseChunkIter(doc: string) {
@@ -19,7 +19,7 @@ function parseChunk(header: string, code: string): Chunk {
 
 function parseChunkHeader(header): Chunk {
   let chunk = new Chunk();
-  let [_, language, engine, label, customOptions] = header.match(/(^[\w\d_-]+)(?:\((\S+?)\))?(?: ([\w\d_-]+))?(?:, ?(.*?))?$/);
+  let [_, language, engine, label, customOptions] = header.match(/(^\S+)(?:\((\S+?)\))?(?: ([\w\d_-]+))?(?:, ?(.*?))?$/);
 
   if (customOptions) {
     customOptions = parseCustomOptions(customOptions);

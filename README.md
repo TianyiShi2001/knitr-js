@@ -1,5 +1,7 @@
 # knit-js and xmd
 
+[![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
+
 **knit-js** and **xmd** are implementations of R's **[knitr](http://yihui.name/knitr/)** and **[R Markdown]** in Node.js.
 
 ## What does knit-js Do

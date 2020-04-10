@@ -1,8 +1,9 @@
-import { options } from "./Options";
+// import { options } from "./Options";
 import { Chunk } from "./Chunk";
 import * as execa from "execa";
 import tempfile = require("tempfile");
 import * as fs from "fs";
+import * as extend from "xtend";
 
 interface Result {
   output: string;
@@ -21,7 +22,7 @@ export const ENGINE_ALIASES = {
 
 type Engine = (code: string) => Promise<Result>;
 
-function makeSimpleEngine(command: string, args: string[] | string, message?: string): Engine {
+function EvalFromStringEngine(command: string, args: string[] | string, message?: string): Engine {
   return async (code) => {
     args = Array.isArray(args) ? args : [args];
     let res = {} as Result;
@@ -38,30 +39,30 @@ function makeSimpleEngine(command: string, args: string[] | string, message?: st
 }
 
 // JS
-const eng_javascript = makeSimpleEngine("node", "-e");
-const eng_typescript = makeSimpleEngine("ts-node", "-e");
-const eng_coffeescript = makeSimpleEngine("coffee", "-e");
+const eng_javascript = EvalFromStringEngine("node", "-e");
+const eng_typescript = EvalFromStringEngine("ts-node", "-e");
+const eng_coffeescript = EvalFromStringEngine("coffee", "-e");
 // Other programming languages
-const eng_clojure_lein = makeSimpleEngine("lein", ["exec", "-ep"]); // The Leiningen engine requires lein-exec plugin.
-const eng_groovy = makeSimpleEngine("groovy", "-e");
-const eng_octave = makeSimpleEngine("octave", "--eval");
-const eng_perl = makeSimpleEngine("perl", "-E");
-const eng_python = makeSimpleEngine("python", "-c");
-const eng_ruby = makeSimpleEngine("ruby", "-e");
-const eng_scala = makeSimpleEngine("scala", "-e");
+const eng_clojure_lein = EvalFromStringEngine("lein", ["exec", "-ep"]); // The Leiningen engine requires lein-exec plugin.
+const eng_groovy = EvalFromStringEngine("groovy", "-e");
+const eng_octave = EvalFromStringEngine("octave", "--eval");
+const eng_perl = EvalFromStringEngine("perl", "-E");
+const eng_python = EvalFromStringEngine("python", "-c");
+const eng_ruby = EvalFromStringEngine("ruby", "-e");
+const eng_scala = EvalFromStringEngine("scala", "-e");
 // Shell
-const eng_sh = makeSimpleEngine("sh", "-c");
-const eng_bash = makeSimpleEngine("bash", "-c");
-const eng_csh = makeSimpleEngine("csh", "-c");
-const eng_dash = makeSimpleEngine("dash", "c");
-const eng_ksh = makeSimpleEngine("ksh", "-c");
-const eng_tcsh = makeSimpleEngine("tcsh", "-c");
-const eng_zsh = makeSimpleEngine("zsh", "-c");
+const eng_sh = EvalFromStringEngine("sh", "-c");
+const eng_bash = EvalFromStringEngine("bash", "-c");
+const eng_csh = EvalFromStringEngine("csh", "-c");
+const eng_dash = EvalFromStringEngine("dash", "-c");
+const eng_ksh = EvalFromStringEngine("ksh", "-c");
+const eng_tcsh = EvalFromStringEngine("tcsh", "-c");
+const eng_zsh = EvalFromStringEngine("zsh", "-c");
 // SQL
-const eng_mysql = makeSimpleEngine("mysql", "-e");
-const eng_psql = makeSimpleEngine("psql", "-c");
+const eng_mysql = EvalFromStringEngine("mysql", "-e");
+const eng_psql = EvalFromStringEngine("psql", "-c");
 
-function makeSimpleCompiledEngine(command: string, ext: string, buildOpt?: string, outOpt: string | null = "-o"): Engine {
+function CompileAndEvalEngine(command: string, ext: string, buildOpt?: string, outOpt: string | null = "-o"): Engine {
   return async (code) => {
     const src = tempfile(ext);
     const bin = src.split(".").pop();
@@ -93,19 +94,24 @@ function makeSimpleCompiledEngine(command: string, ext: string, buildOpt?: strin
 }
 
 // C-like
-const eng_c_clang = makeSimpleCompiledEngine("clang", "c");
-const eng_c_gcc = makeSimpleCompiledEngine("gcc", ".c");
-const eng_cpp_clang = makeSimpleCompiledEngine("clang", ".cpp");
-const eng_cpp_gpp = makeSimpleCompiledEngine("g++", ".cpp");
+const eng_c_clang = CompileAndEvalEngine("clang", "c");
+const eng_c_gcc = CompileAndEvalEngine("gcc", ".c");
+const eng_cpp_clang = CompileAndEvalEngine("clang", ".cpp");
+const eng_cpp_gpp = CompileAndEvalEngine("g++", ".cpp");
 // others
-const eng_go = makeSimpleCompiledEngine("go", ".go", "build", null);
-const eng_rust_rustc = makeSimpleCompiledEngine("rustc", ".rs");
+const eng_go = CompileAndEvalEngine("go", ".go", "build", null);
+const eng_rust_rustc = CompileAndEvalEngine("rustc", ".rs");
 
-// export function defaultEngine(language) {
-//   const defaultEngines = { bash: "bash", javascript: "node", rust: "rustc", r: "Rscript", python: "python" };
-//   let options = getOptions();
-//   return (options.defaultEngines && options.defaultEngines[language]) || defaultEngines[language];
-// }
+function ReplEngine() {}
+
+const eng_scala_repl = ReplEngine();
+
+export function defaultEngine(language) {
+  const defaultEngines = { bash: "bash", javascript: "node", rust: "rustc", r: "Rscript", python: "python" };
+  //let options = getOptions();
+  //return (options.defaultEngines && options.defaultEngines[language]) || defaultEngines[language];
+  return defaultEngines;
+}
 
 const engine2language = {
   node: "javascript",
@@ -113,7 +119,7 @@ const engine2language = {
 };
 
 // Automatically generated by macros/gen_engines.py
-const ENGINES: { [lang: string]: { [engine: string]: Engine } } = {
+export let ENGINES: { [lang: string]: { [engine: string]: Engine } } = {
   bash: { bash: eng_bash },
   c: { clang: eng_c_clang, gcc: eng_c_gcc },
   clojure: { lein: eng_clojure_lein },
@@ -138,3 +144,5 @@ const ENGINES: { [lang: string]: { [engine: string]: Engine } } = {
   typescript: { ts: eng_typescript },
   zsh: { zsh: eng_zsh },
 };
+
+ENGINES.shell = extend(ENGINES.sh, ENGINES.bash, ENGINES.csh, ENGINES.dash, ENGINES.ksh, ENGINES.tcsh, ENGINES.zsh);

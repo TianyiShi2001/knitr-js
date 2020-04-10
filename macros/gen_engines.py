@@ -26,8 +26,8 @@ lang_to_engine = re.sub(
 print(lang_to_engine)
 
 engines_file_content = re.sub(
-    r"const ENGINES.+?;",
-    "const ENGINES: { [lang: string]: { [engine: string]: Engine } } = "
+    r"export let ENGINES.+?;",
+    "export let ENGINES: { [lang: string]: { [engine: string]: Engine } } = "
     + lang_to_engine
     + ";",
     engines_file_content,

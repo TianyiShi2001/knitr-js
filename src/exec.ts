@@ -10,12 +10,3 @@ function* execChunks(doc) {
     }
   }
 }
-
-export async function executeChunk(command, arguments) {
-  try {
-    const res = await execa(command, arguments);
-    console.log(res);
-  } catch (e) {
-    console.log(e);
-  }
-}

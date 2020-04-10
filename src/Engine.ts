@@ -65,13 +65,13 @@ const eng_psql = EvalFromStringEngine("psql", "-c");
 function CompileAndEvalEngine(command: string, ext: string, buildOpt?: string, outOpt: string | null = "-o"): Engine {
   return async (code) => {
     const src = tempfile(ext);
-    const bin = src.split(".").pop();
+    const bin = src.split(".")[0];
     fs.writeFileSync(src, code, "utf8");
 
     let args = [];
     buildOpt && args.push(buildOpt);
+    outOpt && args.push(outOpt) && args.push(bin);
     args.push(src);
-    outOpt && args.push(outOpt);
 
     let res = {} as Result;
     try {
@@ -94,12 +94,12 @@ function CompileAndEvalEngine(command: string, ext: string, buildOpt?: string, o
 }
 
 // C-like
-const eng_c_clang = CompileAndEvalEngine("clang", "c");
+const eng_c_clang = CompileAndEvalEngine("clang", ".c");
 const eng_c_gcc = CompileAndEvalEngine("gcc", ".c");
 const eng_cpp_clang = CompileAndEvalEngine("clang", ".cpp");
 const eng_cpp_gpp = CompileAndEvalEngine("g++", ".cpp");
 // others
-const eng_go = CompileAndEvalEngine("go", ".go", "build", null);
+const eng_go = CompileAndEvalEngine("go", ".go", "build");
 const eng_rust_rustc = CompileAndEvalEngine("rustc", ".rs");
 
 function ReplEngine() {}

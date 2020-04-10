@@ -16,3 +16,25 @@ test("gcc hello.c", () => {
     expect(res.output).toBe("hello");
   });
 });
+
+test("clang hello.c", () => {
+  return clang(c_hello).then((res) => {
+    expect(res.output).toBe("hello");
+  });
+});
+
+const { go } = ENGINES.go;
+
+const go_hello = `\
+package main
+import "fmt"
+func main() {
+    fmt.Println("hello")
+}
+`;
+
+test("go build hello.go", () => {
+  return go(go_hello).then((res) => {
+    expect(res.output).toBe("hello");
+  });
+});
